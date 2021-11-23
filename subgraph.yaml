@@ -1,0 +1,55 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: HumanityGovernance
+    network: mainnet
+    source:
+      address: "0xdd806c4fdad2949a97fda79036cfbb8750181b37"
+      abi: HumanityGovernance
+      startBlock: 7720000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Account
+        - Vote
+      abis:
+        - name: HumanityGovernance
+          file: ./abis/HumanityGovernance.json
+      eventHandlers:
+        - event: Propose(indexed uint256,indexed address,indexed address,bytes)
+          handler: handlePropose
+        - event: Vote(indexed uint256,indexed address,bool,uint256)
+          handler: handleVote
+        - event: RemoveVote(indexed uint256,indexed address)
+          handler: handleRemoveVote
+        - event: Terminate(indexed uint256)
+          handler: handleTerminate
+        - event: Execute(indexed uint256)
+          handler: handleExecute
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: TwitterHumanityApplicant
+    network: mainnet
+    source:
+      address: "0x9d661f7773be14439b4223f5b516bc7ef67b0369"
+      abi: TwitterHumanityApplicant
+      startBlock: 7720000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Account
+      abis:
+        - name: TwitterHumanityApplicant
+          file: ./abis/TwitterHumanityApplicant.json
+      eventHandlers:
+        - event: Apply(indexed uint256,indexed address,string)
+          handler: handleApply
+      file: ./src/mapping.ts

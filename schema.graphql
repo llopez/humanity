@@ -1,0 +1,36 @@
+enum ProposalResult {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum VoteValue {
+  YES
+  NO
+}
+
+type Account @entity {
+  id: ID!
+  address: String!
+  proposals: [Proposal!]! @derivedFrom(field: "proposer")
+  votes: [Vote!]! @derivedFrom(field: "voter")
+  # countProposals: BigInt!
+  # countVotes: BigInt!
+}
+
+type Proposal @entity {
+  id: ID!
+  proposalData: String!
+  proposer: Account!
+  result: ProposalResult!
+  countYesVotes: BigInt!
+  countNoVotes: BigInt!
+  votes: [Vote!]! @derivedFrom(field: "proposal")
+}
+
+type Vote @entity {
+  id: ID!
+  proposal: Proposal!
+  voter: Account!
+  value: VoteValue!
+}
